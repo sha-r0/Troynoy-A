@@ -1,3 +1,4 @@
+import 'package:first/src/features/authentication/view/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -17,21 +18,9 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Color(0xff13322A)),
         useMaterial3: true,
       ),
-      home: Signup(),
+      home: SplashScreen(),
     );
   }
 }
 
-class Signup extends StatelessWidget {
-  const Signup({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Text('hellow'),
-      ),
-    );
-  }
-}
 
