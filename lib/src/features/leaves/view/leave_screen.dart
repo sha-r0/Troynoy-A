@@ -1,17 +1,16 @@
 import 'package:first/src/features/leaves/view/takeLeave/take_leave.dart';
 import 'package:first/src/features/leaves/view/viewLeave/view_leave.dart';
-import 'package:first/src/features/works/view/work/workadd/workadd_screen.dart';
 import 'package:flutter/material.dart';
+import 'leavestatus/Leave_status.dart';
 
-
-class WorkScreen extends StatefulWidget {
-  const WorkScreen({super.key});
+class LeaveScreen extends StatefulWidget {
+  const LeaveScreen({super.key});
 
   @override
-  State<WorkScreen> createState() => _WorkScreenState();
+  State<LeaveScreen> createState() => _LeaveScreenState();
 }
 
-class _WorkScreenState extends State<WorkScreen> {
+class _LeaveScreenState extends State<LeaveScreen> {
 
 
   @override
@@ -29,7 +28,7 @@ class _WorkScreenState extends State<WorkScreen> {
           ),),
           backgroundColor: Color(0xFF13322A),
           title: Text(
-            'Work',
+            'Leave',
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
           bottom: PreferredSize(
@@ -39,13 +38,13 @@ class _WorkScreenState extends State<WorkScreen> {
               child: TabBar(
                 tabs: [
                   Tab(
-                    text: 'Work Assign',
+                    text: 'View Leave',
                   ),
                   Tab(
-                    text: 'Add Work',
+                    text: 'Take Leave',
                   ),
                   Tab(
-                    text: 'Uploaded Work',
+                    text: 'Leave Stats',
                   )
                 ],
                 // Customize indicator color
@@ -58,8 +57,9 @@ class _WorkScreenState extends State<WorkScreen> {
         ),
         body: TabBarView(
           children: [
-
-            Workadd()
+            View_leave(),
+            Take_leave(),
+            LeaveStatus(),
           ],
         ),
       ),

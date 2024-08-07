@@ -1,19 +1,18 @@
-import 'package:first/src/features/leaves/view/takeLeave/take_leave.dart';
-import 'package:first/src/features/leaves/view/viewLeave/view_leave.dart';
-import 'package:first/src/features/works/view/work/workadd/workadd_screen.dart';
+import 'package:first/src/constant/colors.dart';
+import 'package:first/src/features/expenses/view/expenseadds/expense_add.dart';
+import 'package:first/src/features/expenses/view/expensepaid/expensepaid.dart';
 import 'package:flutter/material.dart';
+import '../../../common_widget/custom_text.dart';
+import 'expenseview/expense_view.dart';
 
-
-class WorkScreen extends StatefulWidget {
-  const WorkScreen({super.key});
+class ExpanseScreen extends StatefulWidget {
+  const ExpanseScreen({super.key});
 
   @override
-  State<WorkScreen> createState() => _WorkScreenState();
+  State<ExpanseScreen> createState() => _ExpanseScreenState();
 }
 
-class _WorkScreenState extends State<WorkScreen> {
-
-
+class _ExpanseScreenState extends State<ExpanseScreen> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -21,15 +20,18 @@ class _WorkScreenState extends State<WorkScreen> {
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          leading:  IconButton(onPressed: (){
-            Navigator.pop(context);
-          }, icon: Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-          ),),
-          backgroundColor: Color(0xFF13322A),
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ),
+          ),
+          backgroundColor: primaryColor,
           title: Text(
-            'Work',
+            'Expense',
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
           bottom: PreferredSize(
@@ -39,13 +41,13 @@ class _WorkScreenState extends State<WorkScreen> {
               child: TabBar(
                 tabs: [
                   Tab(
-                    text: 'Work Assign',
+                    text: 'Expense',
                   ),
                   Tab(
-                    text: 'Add Work',
+                    text: 'Add Expense',
                   ),
                   Tab(
-                    text: 'Uploaded Work',
+                    text: 'Paid Expense',
                   )
                 ],
                 // Customize indicator color
@@ -58,15 +60,14 @@ class _WorkScreenState extends State<WorkScreen> {
         ),
         body: TabBarView(
           children: [
-
-            Workadd()
+            Expenseview(),
+            Expenseadd(),
+           Expensepaid()
           ],
         ),
       ),
     );
   }
 }
-
-
 
 

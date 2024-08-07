@@ -1,12 +1,18 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:first/src/constant/colors.dart';
 import 'package:first/src/constant/text_strings.dart';
 import 'package:first/src/features/home/navigationdrawer/navigationDrawer.dart';
+import 'package:first/src/features/home/slideactionbutton/slideactionbutton.dart';
+import 'package:first/src/features/home/taskmanagement/taskmanagement.dart';
 import 'package:first/src/features/home/todaystatus/today_status.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:slide_to_act/slide_to_act.dart';
 
 import '../../common_widget/custom_text.dart';
 import 'attendence_stats/attendence_stats.dart';
+import 'floatingbutton/floatingbutton.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -16,17 +22,19 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
-
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Builder(builder: (context)=> IconButton(onPressed: (){
-          Scaffold.of(context).openDrawer();
-        }, icon: Icon(Icons.menu,color: Colors.white,))),
+        leading: Builder(
+            builder: (context) => IconButton(
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                },
+                icon: Icon(
+                  Icons.menu,
+                  color: Colors.white,
+                ))),
         actions: [
           IconButton(
             onPressed: () {
@@ -46,20 +54,20 @@ class _HomeScreenState extends State<HomeScreen> {
         centerTitle: true,
       ),
       drawer: Navigationdrawer(),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            AttendenceStats(),
-            SizedBox(height: 15),
-            TodayStatus(),
-
-          ],
+      body: Stack(children: [
+        SingleChildScrollView(
+          child: Column(
+            children: [
+              AttendenceStats(),
+              SizedBox(height: 15),
+              TodayStatus(),
+              TaskManagement(),
+            ],
+          ),
         ),
-      ),
+        SlideActionbutton()
+      ]),
+      floatingActionButton: Floatingbutton(),
     );
   }
 }
-
-
-
-
