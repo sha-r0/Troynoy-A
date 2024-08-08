@@ -1,18 +1,14 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:first/src/constant/colors.dart';
 import 'package:first/src/constant/text_strings.dart';
-import 'package:first/src/features/home/navigationdrawer/navigationDrawer.dart';
-import 'package:first/src/features/home/slideactionbutton/slideactionbutton.dart';
-import 'package:first/src/features/home/taskmanagement/taskmanagement.dart';
-import 'package:first/src/features/home/todaystatus/today_status.dart';
+import 'package:first/src/features/home/controller/attendenceMarkController/attendenceMarkController.dart';
+import 'package:first/src/features/home/view/slideactionbutton/slideactionbutton.dart';
+import 'package:first/src/features/home/view/taskmanagement/taskmanagement.dart';
+import 'package:first/src/features/home/view/todaystatus/today_status.dart';
 import 'package:flutter/material.dart';
-import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:slide_to_act/slide_to_act.dart';
-
-import '../../common_widget/custom_text.dart';
+import 'package:get/get.dart';
 import 'attendence_stats/attendence_stats.dart';
 import 'floatingbutton/floatingbutton.dart';
+import 'navigationdrawer/navigationDrawer.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -22,6 +18,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
+  final AttendenceController attendenceController = Get.put(AttendenceController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
-        SlideActionbutton()
+        SlideActionButton()
       ]),
       floatingActionButton: Floatingbutton(),
     );

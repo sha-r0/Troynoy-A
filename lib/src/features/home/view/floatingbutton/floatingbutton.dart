@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:get/get.dart';
 
-import '../../expenses/view/expense_screen.dart';
-import '../../leaves/view/leave_screen.dart';
-import '../../sitevisit/view/site_visit_screen.dart';
-import '../../works/view/work/work_screen.dart';
+import '../../../expenses/view/expense_screen.dart';
+import '../../../leaves/view/leave_screen.dart';
+import '../../../sitevisit/view/site_visit_screen.dart';
+import '../../../works/view/work/work_screen.dart';
+
 
 class Floatingbutton extends StatelessWidget {
   const Floatingbutton({
@@ -33,30 +35,28 @@ class Floatingbutton extends StatelessWidget {
             shape: CircleBorder(),
             label: 'Work',
             onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => WorkScreen()));
+              Get.to(WorkScreen());
             }),
         SpeedDialChild(
             child: Icon(Icons.money),
             shape: CircleBorder(),
             label: 'Expense',
             onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => ExpanseScreen()));
+              Get.to(ExpanseScreen());
             }),
         SpeedDialChild(
             child: Icon(Icons.directions_walk),
             shape: CircleBorder(),
             label: 'Site Visit',
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>SiteVisitScreen()));
+              Get.to(SiteVisitScreen());
             }),
         SpeedDialChild(
             child: Icon(Icons.remove),
             shape: CircleBorder(),
             label: 'Leave',
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>LeaveScreen()));
+              Get.to(LeaveScreen());
             }),
       ],
     );

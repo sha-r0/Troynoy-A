@@ -1,8 +1,8 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../../../../common_widget/custom_text.dart';
 
-import '../../../common_widget/custom_text.dart';
 
 class AttendenceStats extends StatelessWidget {
   const AttendenceStats({

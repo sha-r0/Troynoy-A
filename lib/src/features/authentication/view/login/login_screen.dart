@@ -1,7 +1,9 @@
 import 'package:first/src/constant/colors.dart';
 import 'package:first/src/constant/text_strings.dart';
-import 'package:first/src/features/home/home_screen.dart';
+import 'package:first/src/features/home/controller/attendenceMarkController/attendenceMarkController.dart';
+import 'package:first/src/features/home/view/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../../constant/image_strings.dart';
 
@@ -18,6 +20,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _obscurePassword = true;
+
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +113,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           if (_formKey.currentState!.validate()) {
                             print(employeeIdController.text);
                             print(passwordController.text);
-                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomeScreen()));
+                            Get.to(HomeScreen());
                           }
 
                         },
