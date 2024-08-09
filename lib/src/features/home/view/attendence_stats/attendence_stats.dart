@@ -1,13 +1,18 @@
+import 'package:first/src/features/home/controller/getAttendencestatscontroller/getAttendencestatsControler.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../../../../common_widget/custom_text.dart';
+import '../attendence_history/attendence_history.dart';
 
 
 class AttendenceStats extends StatelessWidget {
-  const AttendenceStats({
+  AttendenceStats({
     super.key,
   });
+
+  final AttendanceStatsController _controller = Get.put(AttendanceStatsController());
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +29,7 @@ class AttendenceStats extends StatelessWidget {
                     // Navigator.push(context, MaterialPageRoute(builder: (context)=>ServiceScreen()));
                   },
                   child: TextButton(onPressed: (){
-                    // Navigator.push(context, MaterialPageRoute(builder: (context)=>AttendenceHistoryScreen()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>AttendenceHistoryScreen()));
                   }, child: CustomText("View All", 20, Color(0xff13322A))),
                 )
               ],

@@ -11,9 +11,10 @@ class TodayStatus extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      final attendance = _attendenceController.attendanceData.value;
-      final checkIn = attendance?.currentTime ?? '---/---';
-      final checkOut = attendance?.currentDate != null ? attendance!.currentTime : '---/---';
+      final checkIn = _attendenceController.checkIn.value;
+      final checkOut = _attendenceController.checkOut.value;
+      print(checkOut);
+      print(checkIn);
 
       return Column(
         children: [

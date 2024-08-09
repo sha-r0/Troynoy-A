@@ -1,5 +1,6 @@
 import 'package:first/src/constant/colors.dart';
 import 'package:first/src/constant/text_strings.dart';
+import 'package:first/src/features/authentication/controller/auth_controller.dart';
 import 'package:first/src/features/home/controller/attendenceMarkController/attendenceMarkController.dart';
 import 'package:first/src/features/home/view/home_screen.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _obscurePassword = true;
+
+  final AuthController controller = Get.put(AuthController());
 
 
   @override
@@ -112,8 +115,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         onTap: () {
                           if (_formKey.currentState!.validate()) {
                             print(employeeIdController.text);
-                            print(passwordController.text);
-                            Get.to(HomeScreen());
+                            String email = employeeIdController.text;
+                            String password = passwordController.text;
+                            print(email);
+                            controller.loginUser(email, password);
+                            print('Sucess');
                           }
 
                         },

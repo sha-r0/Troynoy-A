@@ -17,23 +17,27 @@ class SlideActionButton extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.only(right: 85, left: 16),
         child: Obx(() {
-          final attendance = _attendenceController.attendanceData.value;
-          final isCheckedIn = attendance?.currentTime != null;
-          final isCheckOut = attendance?.currentTime != null;
+          final isCheckedIn = _attendenceController.isCheckedIn.value;
+          final isButtonVisible = _attendenceController.isButtonVisible.value;
 
-          return  SlideAction(
-            sliderButtonIconPadding: 10,
-            height: 57,
-            onSubmit: () async {
-              _attendenceController.uploadattendence();
-            },
-            text: isCheckedIn ? 'Slide to check out' : 'Slide to check in',
-            textStyle: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.bold),
-            innerColor: Colors.white.withOpacity(0.5),
-            outerColor: Color(0xff13322A),
+          return Visibility(
+            visible: isButtonVisible,
+            child: SlideAction(
+              sliderButtonIconPadding: 10,
+              height: 57,
+              onSubmit: () async {
+                await _attendenceController.uploadattendence();
+              },
+              text: isCheckedIn
+                  ? 'Slide to check out'
+                  : 'Slide to check in',
+              textStyle: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold),
+              innerColor: Colors.white.withOpacity(0.5),
+              outerColor: Color(0xff13322A),
+            ),
           );
         }),
       ),

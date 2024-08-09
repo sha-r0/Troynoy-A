@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:first/src/features/expenses/model/expense_model.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ExpenseController extends GetxController{
@@ -9,6 +10,7 @@ class ExpenseController extends GetxController{
   Future<void> addUser(ExpenseModel expense) async {
     try {
       await _firestore.collection('Expense').add(expense.toMap());
+      Get.snackbar('Success', 'Expense added successfully',colorText: Colors.white);
     } catch (e) {
       print('Error adding user: $e');
     }

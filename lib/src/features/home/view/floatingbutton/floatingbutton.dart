@@ -1,8 +1,9 @@
+import 'package:first/src/features/expenses/controller/expense_controller.dart';
+import 'package:first/src/features/works/controller/work_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get/get.dart';
-
 import '../../../expenses/view/expense_screen.dart';
 import '../../../leaves/view/leave_screen.dart';
 import '../../../sitevisit/view/site_visit_screen.dart';
@@ -10,9 +11,12 @@ import '../../../works/view/work/work_screen.dart';
 
 
 class Floatingbutton extends StatelessWidget {
-  const Floatingbutton({
+Floatingbutton({
     super.key,
   });
+
+final WorkController workController = Get.put(WorkController());
+final ExpenseController expenseController = Get.put(ExpenseController());
 
   @override
   Widget build(BuildContext context) {
@@ -35,14 +39,14 @@ class Floatingbutton extends StatelessWidget {
             shape: CircleBorder(),
             label: 'Work',
             onTap: () {
-              Get.to(WorkScreen());
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>WorkScreen()));
             }),
         SpeedDialChild(
             child: Icon(Icons.money),
             shape: CircleBorder(),
             label: 'Expense',
             onTap: () {
-              Get.to(ExpanseScreen());
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>ExpanseScreen()));
             }),
         SpeedDialChild(
             child: Icon(Icons.directions_walk),

@@ -1,11 +1,12 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:get/get.dart';
-import 'package:intl/intl.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import '../../model/attendenceModel/attendnceModel.dart';
 
 class AttendenceController extends GetxController {
@@ -18,10 +19,14 @@ class AttendenceController extends GetxController {
   Rx<String?> address = Rx<String?>(null);
   Rx<Position?> currentPosition = Rx<Position?>(null);
 
+  RxBool isCheckedIn = false.obs; // To track check-IN status
+  RxBool isCheckedOut = false.obs; // To track check-OUT status
+  RxBool isButtonVisible = true.obs; // To track button visibility
 
-  ///-------------------------------- fetch time ---------------------//////
-  var time = ''.obs;
-  Timer? _timer;
+  var checkIn = '---/---'.obs;
+  var checkOut = '---/---'.obs;
+  var checkInAddress = '---/---'.obs;
+  var checkOutAddress = '---/---'.obs;
 
   @override
   void onInit() {
@@ -29,8 +34,14 @@ class AttendenceController extends GetxController {
     fetchDateAndTime();
     fetchTime();
     startTimer();
+    checkCurrentStatus();// Check current status on init
   }
 
+  var time = ''.obs;
+  Timer? _timer;
+
+
+  
   void fetchTime() {
     time.value = DateFormat('HH:mm:ss').format(DateTime.now());
   }
@@ -48,9 +59,7 @@ class AttendenceController extends GetxController {
     _timer?.cancel();
     super.onClose();
   }
-  ///-------------------------------- fetch time ---------------------//////
 
-  ///-------------------------------- open camera ---------------------//////
   Future<void> openCamera() async {
     try {
       final ImagePicker picker = ImagePicker();
@@ -61,10 +70,8 @@ class AttendenceController extends GetxController {
       print('Error picking image: $e');
     }
   }
-  ///-------------------------------- open camera ---------------------//////
 
-  ///-------------------------------- get current location---------------------//////
-  Future<void> _getCurrentLocation() async {
+  Future<void> _getCurrentLocation(Rx<String> location) async {
     try {
       Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.best,
@@ -78,70 +85,100 @@ class AttendenceController extends GetxController {
       Placemark? place = placemarks.isNotEmpty ? placemarks[0] : null;
 
       currentPosition.value = position;
-      address.value = "${place?.name ?? ''}, ${place?.subThoroughfare ?? ''} ${place?.thoroughfare ?? ''}, ${place?.subLocality ?? ''}, ${place?.locality ?? ''}, ${place?.administrativeArea ?? ''} ${place?.postalCode ?? ''}, ${place?.country ?? ''}";
-      print(address.value);
+      location.value = "${place?.name ?? ''}, ${place?.subThoroughfare ?? ''} ${place?.thoroughfare ?? ''}, ${place?.subLocality ?? ''}, ${place?.locality ?? ''}, ${place?.administrativeArea ?? ''} ${place?.postalCode ?? ''}, ${place?.country ?? ''}";
+      print(location.value);
     } catch (e) {
       print("Error getting location: $e");
     }
   }
-  ///-------------------------------- get current location---------------------//////
 
-
-  var checkIn = '---/---'.obs;
-  var checkOut = '---/---'.obs;
-
-  void uploadattendence()async{
-  DocumentSnapshot snap2 = await FirebaseFirestore.instance
-      .collection('Attendences')
-      .doc(DateFormat('dd MMMM yyyy').format(DateTime.now()))
-      .get();
+  Future<void> uploadattendence() async {
     final todayDate = DateFormat('dd MMMM yyyy').format(DateTime.now());
-    final currentTime = DateFormat('hh:mm').format(DateTime.now());
+    final currentTime = DateFormat('HH:mm:ss').format(DateTime.now());
 
     try {
-      // Fetch the document from Firestore
+      await openCamera();
+      await _getCurrentLocation(checkInAddress);
+
       DocumentSnapshot snap2 = await FirebaseFirestore.instance
           .collection('Attendences')
           .doc(todayDate)
           .get();
 
-      // If document exists, update 'Check Out'
       if (snap2.exists) {
-        checkIn.value = snap2['Check In'];
-        checkOut.value = currentTime;
-        await FirebaseFirestore.instance
-            .collection('Attendences')
-            .doc(todayDate)
-            .update({
-          'Check In': checkIn.value,
-          'Check Out': checkOut.value,
-        });
+        // Document exists, update check-out time and address
+        if (isCheckedIn.value && !isCheckedOut.value) {
+          checkIn.value = snap2['Check In'];
+          checkOut.value = currentTime;
+          await FirebaseFirestore.instance
+              .collection('Attendences')
+              .doc(todayDate)
+              .update({
+            'Check Out': checkOut.value,
+            'Check Out Address': checkInAddress.value ?? 'Not Available',
+          });
+          isCheckedIn.value = false; // Toggle the state
+          isCheckedOut.value = true; // Update check-out status
+          isButtonVisible.value = false; // Hide button after check-out
+        }
       } else {
-        // If document does not exist, create it with 'Check In'
-        checkIn.value = currentTime;
-        await FirebaseFirestore.instance
-            .collection('Attendences')
-            .doc(todayDate)
-            .set({
-          'Check In': checkIn.value,
-          'Check Out': checkOut.value,
-        });
+        // Document does not exist, create it with check-in time and address
+        if (!isCheckedIn.value) {
+          checkIn.value = currentTime;
+          await FirebaseFirestore.instance
+              .collection('Attendences')
+              .doc(todayDate)
+              .set({
+            'Check In': checkIn.value,
+            'Check Out': '---/---', // Initial check-out is null
+            'Check In Address': checkInAddress.value ?? 'Not Available',
+            'Check Out Address': '---/---', // Initial check-out address is null
+          });
+          isCheckedIn.value = true; // Toggle the state
+          isButtonVisible.value = true; // Show button after check-in
+        }
       }
     } catch (e) {
-      // Handle errors, such as connectivity issues
       print("Error uploading attendance: $e");
     }
-
   }
 
 
-
-  // Fetch current date and time
   void fetchDateAndTime() {
     currentDate.value = DateFormat('dd MMMM yyyy').format(DateTime.now());
     currentTime.value = DateFormat('HH:mm:ss').format(DateTime.now());
   }
 
-}
+  void checkCurrentStatus() async {
+    final todayDate = DateFormat('dd MMMM yyyy').format(DateTime.now());
+    try {
+      DocumentSnapshot snap2 = await FirebaseFirestore.instance
+          .collection('Attendences')
+          .doc(todayDate)
+          .get();
 
+      if (snap2.exists) {
+        // Document exists, check status
+        final checkInValue = snap2['Check In'] ?? '---/---';
+        final checkOutValue = snap2['Check Out'] ?? '---/---';
+
+        checkIn.value = checkInValue;
+        checkOut.value = checkOutValue;
+
+        isCheckedIn.value = checkInValue != '---/---' && checkOutValue == '---/---'; // Checked in but not checked out
+        isCheckedOut.value = checkOutValue != '---/---'; // Checked out
+        isButtonVisible.value = !isCheckedOut.value; // Hide button if checked out
+      } else {
+        checkIn.value = '---/---';
+        checkOut.value = '---/---';
+        isCheckedIn.value = false;
+        isCheckedOut.value = false;
+        isButtonVisible.value = true; // Show button if not checked in
+      }
+    } catch (e) {
+      print("Error checking current status: $e");
+    }
+  }
+
+}
 
